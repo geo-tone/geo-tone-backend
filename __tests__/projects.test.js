@@ -16,12 +16,12 @@ describe('geo-tone-backend routes', () => {
     title: 'My project',
     steps: 8,
     bpm: 90,
-    userId: 1,
+    userId: '1',
   };
 
   const mockUser = {
     username: 'username',
-    password: '123456',
+    passwordHash: '123456',
   };
 
   // POST
