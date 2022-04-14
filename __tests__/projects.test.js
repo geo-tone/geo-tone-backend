@@ -19,9 +19,15 @@ describe('geo-tone-backend routes', () => {
     userId: 1,
   };
 
+  const mockUser = {
+    username: 'username',
+    password: '123456',
+  };
+
   // POST
   it('creates a row in the projects table', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
     const res = await request(app).post('/api/v1/projects').send(mockProject);
-    expect(res.body).toEqual({ id: expect.any(String), ...mockProject });
+    expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 });
