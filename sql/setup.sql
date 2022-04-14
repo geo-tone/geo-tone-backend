@@ -24,8 +24,8 @@ CREATE TABLE channels(
   channel_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
   project_id BIGINT NOT NULL, 
   title TEXT NOT NULL, 
-  instrument TEXT NOT NULL, 
-  fx TEXT NOT NULL, 
+  instrument JSON NOT NULL, 
+  fx JSON NOT NULL, 
   steps TEXT [] NOT NULL, 
   FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
