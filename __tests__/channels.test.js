@@ -20,9 +20,17 @@ describe('geo-tone-backend routes', () => {
     userId: '1',
   };
 
-  const mockChannel = {
+  const mockChannel1 = {
     projectId: '1',
     title: 'what is the title',
+    instrument: {},
+    fx: {},
+    steps: [],
+  };
+
+  const mockChannel2 = {
+    projectId: '1',
+    title: 'what is the title, really',
     instrument: {},
     fx: {},
     steps: [],
@@ -33,10 +41,26 @@ describe('geo-tone-backend routes', () => {
     const project = await Project.insert(mockProject);
     const res = await request(app)
       .post(`/api/v1/channels/${project.projectId}`)
-      .send(mockChannel);
+      .send(mockChannel1);
     expect(res.body).toEqual({
       channelId: expect.any(String),
-      ...mockChannel,
+      ...mockChannel1,
     });
+  });
+
+  // GET ALL CHANNELS BY PROJECT ID
+  it('gets all channels by a project id', async () => {
+    const project = await Project.insert(mockProject);
+    await request(app)
+      .post(`/api/v1/channels/${project.projectId}`)
+      .send(mockChannel1);
+    await request(app)
+      .post(`/api/v1/channels/${project.projectId}`)
+      .send(mockChannel2);
+    const res = await request(app).get(`/api/v1/channels/${project.projectId}`);
+    expect(res.body).toEqual([
+      { channelId: expect.any(String), ...mockChannel1 },
+      { channelId: expect.any(String), ...mockChannel2 },
+    ]);
   });
 });
