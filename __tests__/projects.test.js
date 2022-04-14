@@ -30,4 +30,16 @@ describe('geo-tone-backend routes', () => {
     const res = await request(app).post('/api/v1/projects').send(mockProject);
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
+
+  // GET PROFILE
+  it('gets all projects associated with a single user', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
+
+    await request(app).post('/api/v1/projects').send(mockProject);
+
+    const res = await request(app).get('/api/v1/projects/1');
+    expect(res.body).toEqual([
+      { projectId: expect.any(String), ...mockProject },
+    ]);
+  });
 });
