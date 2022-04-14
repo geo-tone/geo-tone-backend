@@ -2,6 +2,7 @@
 -- The SQL in this file will be executed when you run `npm run setup-db`
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS channels CASCADE;
 
 CREATE TABLE users(
     user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -17,6 +18,16 @@ CREATE TABLE projects(
   steps SMALLINT NOT NULL,
   bpm SMALLINT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE channels(
+  channel_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+  project_id BIGINT NOT NULL, 
+  title TEXT NOT NULL, 
+  instrument TEXT NOT NULL, 
+  fx TEXT NOT NULL, 
+  steps TEXT [] NOT NULL, 
+  FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
 
 INSERT INTO users(username, password_hash)

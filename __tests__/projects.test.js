@@ -26,14 +26,14 @@ describe('geo-tone-backend routes', () => {
 
   // POST
   it('creates a row in the projects table', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    // await request(app).post('/api/v1/users').send(mockUser);
     const res = await request(app).post('/api/v1/projects').send(mockProject);
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 
   // GET PROJECTS BY USER ID
   it('gets all projects associated with a single user_id', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    // await request(app).post('/api/v1/users').send(mockUser);
 
     await request(app).post('/api/v1/projects').send(mockProject);
 
