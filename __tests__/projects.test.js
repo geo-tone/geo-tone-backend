@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const Project = require('../lib/models/Project');
 
 describe('geo-tone-backend routes', () => {
   beforeEach(() => {
@@ -51,5 +52,17 @@ describe('geo-tone-backend routes', () => {
 
     const res = await request(app).get('/api/v1/projects/1');
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
+  });
+
+  // EDIT A PROJECT BY PROJECT ID
+  it('modifies a project by project id', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
+
+    const project = await Project.insert(mockProject);
+
+    const res = await request(app)
+      .patch(`/api/v1/projects/${project.projectId}`)
+      .send({ title: 'new title' });
+    expect(res.body).toEqual({ ...project, title: 'new title' });
   });
 });
