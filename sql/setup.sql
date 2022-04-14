@@ -19,3 +19,6 @@ CREATE TABLE projects(
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+INSERT INTO users(username, password_hash)
+VALUES ('space-lady', '123456'); 
+
