@@ -25,6 +25,13 @@ describe('geo-tone-backend routes', () => {
     passwordHash: '123456',
   };
 
+  const seededProject = {
+    title: 'our seeded project',
+    steps: 8,
+    bpm: 90,
+    userId: '1',
+  };
+
   // POST
   it('creates a row in the projects table', async () => {
     // await request(app).post('/api/v1/users').send(mockUser);
@@ -40,6 +47,7 @@ describe('geo-tone-backend routes', () => {
 
     const res = await request(app).get('/api/v1/projects/user/1');
     expect(res.body).toEqual([
+      { projectId: expect.any(String), ...seededProject },
       { projectId: expect.any(String), ...mockProject },
     ]);
   });
@@ -50,7 +58,7 @@ describe('geo-tone-backend routes', () => {
 
     await request(app).post('/api/v1/projects').send(mockProject);
 
-    const res = await request(app).get('/api/v1/projects/1');
+    const res = await request(app).get('/api/v1/projects/2');
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 
@@ -65,4 +73,9 @@ describe('geo-tone-backend routes', () => {
       .send({ title: 'new title' });
     expect(res.body).toEqual({ ...project, title: 'new title' });
   });
+
+  // DELETE A PROJECT BY PROJECT ID
+  // it('deletes a project by project id', async () => {
+  //   const
+  // })
 });
