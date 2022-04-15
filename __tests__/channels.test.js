@@ -22,7 +22,7 @@ describe('geo-tone-backend routes', () => {
   };
 
   const mockChannel1 = {
-    projectId: '1',
+    projectId: '2',
     title: 'what is the title',
     instrument: {},
     fx: {},
@@ -30,7 +30,7 @@ describe('geo-tone-backend routes', () => {
   };
 
   const mockChannel2 = {
-    projectId: '1',
+    projectId: '2',
     title: 'what is the title, really',
     instrument: {},
     fx: {},
