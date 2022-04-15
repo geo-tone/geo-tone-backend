@@ -57,10 +57,25 @@ describe('geo-tone-backend routes', () => {
     await request(app)
       .post(`/api/v1/channels/${project.projectId}`)
       .send(mockChannel2);
-    const res = await request(app).get(`/api/v1/channels/${project.projectId}`);
+    const res = await request(app).get(
+      `/api/v1/channels/project/${project.projectId}`
+    );
     expect(res.body).toEqual([
       { channelId: expect.any(String), ...mockChannel1 },
       { channelId: expect.any(String), ...mockChannel2 },
     ]);
+  });
+
+  // GET CHANNEL BY CHANNEL ID
+  it('get a channel by channel id', async () => {
+    const project = await Project.insert(mockProject);
+    await request(app)
+      .post(`/api/v1/channels/${project.projectId}`)
+      .send(mockChannel1);
+    const res = await request(app).get('/api/v1/channels//1');
+    expect(res.body).toEqual({
+      channelId: expect.any(String),
+      ...mockChannel1,
+    });
   });
 });
