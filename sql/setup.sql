@@ -33,3 +33,6 @@ CREATE TABLE channels(
 INSERT INTO users(username, password_hash)
 VALUES ('space-lady', '123456'); 
 
+INSERT INTO projects(title, steps, bpm, user_id)
+VALUES ('our seeded project', 8, 90, '1'); 
+
