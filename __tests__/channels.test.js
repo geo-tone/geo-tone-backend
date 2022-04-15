@@ -26,7 +26,7 @@ describe('geo-tone-backend routes', () => {
     title: 'what is the title',
     instrument: {},
     fx: {},
-    steps: [],
+    steps: ['F6', 'F2'],
   };
 
   const mockChannel2 = {
@@ -73,7 +73,7 @@ describe('geo-tone-backend routes', () => {
     await request(app)
       .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel1);
-    const res = await request(app).get('/api/v1/channels/1');
+    const res = await request(app).get('/api/v1/channels/2');
     expect(res.body).toEqual({
       channelId: expect.any(String),
       ...mockChannel1,
@@ -87,7 +87,7 @@ describe('geo-tone-backend routes', () => {
       .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel1);
     const res = await request(app)
-      .patch('/api/v1/channels/1')
+      .patch('/api/v1/channels/2')
       .send({
         fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
       });
@@ -96,5 +96,11 @@ describe('geo-tone-backend routes', () => {
       ...mockChannel1,
       fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
     });
+  });
+
+  // DELETE A CHANNEL BY CHANNEL ID
+  it('deletes a channel by channel id', async () => {
+    const res = await request(app).delete('/api/v1/channels/1');
+    expect(res.body).toEqual({ message: 'Successfully deleted channel' });
   });
 });

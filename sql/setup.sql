@@ -38,3 +38,6 @@ VALUES ('space-lady', '123456');
 INSERT INTO projects(title, steps, bpm, user_id)
 VALUES ('our seeded project', 8, 90, '1'); 
 
+INSERT INTO channels(project_id, title, instrument, fx, steps)
+VALUES ('1', 'channel title', '{ "osc": "sine" }', '{ "reverb": 0.01 }', '{ "C4", "D4" }');
+
