@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Project = require('../lib/models/Project');
+const Channel = require('../lib/models/Channel');
 
 describe('geo-tone-backend routes', () => {
   beforeEach(() => {
@@ -35,6 +36,7 @@ describe('geo-tone-backend routes', () => {
   // POST
   it('creates a row in the projects table', async () => {
     // await request(app).post('/api/v1/users').send(mockUser);
+
     const res = await request(app).post('/api/v1/projects').send(mockProject);
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
@@ -44,7 +46,6 @@ describe('geo-tone-backend routes', () => {
     // await request(app).post('/api/v1/users').send(mockUser);
 
     await request(app).post('/api/v1/projects').send(mockProject);
-
     const res = await request(app).get('/api/v1/projects/user/1');
     expect(res.body).toEqual([
       { projectId: expect.any(String), ...seededProject },
@@ -55,9 +56,7 @@ describe('geo-tone-backend routes', () => {
   // GET INDIVIDUAL PROJECT BY PROJECT ID
   it('gets an individual project asociated with a project_id', async () => {
     await request(app).post('/api/v1/users').send(mockUser);
-
     await request(app).post('/api/v1/projects').send(mockProject);
-
     const res = await request(app).get('/api/v1/projects/2');
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
@@ -65,9 +64,7 @@ describe('geo-tone-backend routes', () => {
   // EDIT A PROJECT BY PROJECT ID
   it('modifies a project by project id', async () => {
     await request(app).post('/api/v1/users').send(mockUser);
-
     const project = await Project.insert(mockProject);
-
     const res = await request(app)
       .patch(`/api/v1/projects/${project.projectId}`)
       .send({ title: 'new title' });
@@ -75,7 +72,14 @@ describe('geo-tone-backend routes', () => {
   });
 
   // DELETE A PROJECT BY PROJECT ID
-  // it('deletes a project by project id', async () => {
-  //   const
-  // })
+  it('deletes a project by project id', async () => {
+    await Channel.insert('1', {
+      title: 'still not sure',
+      steps: [],
+      instrument: {},
+      fx: {},
+    });
+    const res = await request(app).delete('/api/v1/projects/1');
+    expect(res.body).toEqual({ message: 'Successfully deleted project' });
+  });
 });

@@ -18,6 +18,7 @@ CREATE TABLE projects(
   steps SMALLINT NOT NULL,
   bpm SMALLINT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
+  ON DELETE CASCADE
 );
 
 CREATE TABLE channels(
@@ -28,6 +29,7 @@ CREATE TABLE channels(
   fx JSON NOT NULL, 
   steps TEXT [] NOT NULL, 
   FOREIGN KEY (project_id) REFERENCES projects(project_id)
+  ON DELETE CASCADE
 );
 
 INSERT INTO users(username, password_hash)
