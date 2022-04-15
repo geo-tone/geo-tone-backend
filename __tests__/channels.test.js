@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Project = require('../lib/models/Project');
+const Channel = require('../lib/models/Channel');
 
 describe('geo-tone-backend routes', () => {
   beforeEach(() => {
@@ -40,7 +41,7 @@ describe('geo-tone-backend routes', () => {
   it('creates a channel into a project', async () => {
     const project = await Project.insert(mockProject);
     const res = await request(app)
-      .post(`/api/v1/channels/${project.projectId}`)
+      .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel1);
     expect(res.body).toEqual({
       channelId: expect.any(String),
@@ -52,10 +53,10 @@ describe('geo-tone-backend routes', () => {
   it('gets all channels by a project id', async () => {
     const project = await Project.insert(mockProject);
     await request(app)
-      .post(`/api/v1/channels/${project.projectId}`)
+      .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel1);
     await request(app)
-      .post(`/api/v1/channels/${project.projectId}`)
+      .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel2);
     const res = await request(app).get(
       `/api/v1/channels/project/${project.projectId}`
@@ -70,12 +71,28 @@ describe('geo-tone-backend routes', () => {
   it('get a channel by channel id', async () => {
     const project = await Project.insert(mockProject);
     await request(app)
-      .post(`/api/v1/channels/${project.projectId}`)
+      .post(`/api/v1/channels/project/${project.projectId}`)
       .send(mockChannel1);
-    const res = await request(app).get('/api/v1/channels//1');
+    const res = await request(app).get('/api/v1/channels/1');
     expect(res.body).toEqual({
       channelId: expect.any(String),
       ...mockChannel1,
+    });
+  });
+
+  // EDIT A CHANNEL BY CHANNEL ID
+  it('modifies an existing channel by channel id', async () => {
+    await Project.insert(mockProject);
+    console.log('channel', mockChannel1);
+    const channel = await Channel.insert(mockChannel1);
+    const res = await request(app)
+      .patch(`/api/v1/channels/${channel.channelId}`)
+      .send({
+        fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
+      });
+    expect(res.body).toEqual({
+      ...channel,
+      fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
     });
   });
 });
