@@ -82,16 +82,18 @@ describe('geo-tone-backend routes', () => {
 
   // EDIT A CHANNEL BY CHANNEL ID
   it('modifies an existing channel by channel id', async () => {
-    await Project.insert(mockProject);
-    console.log('channel', mockChannel1);
-    const channel = await Channel.insert(mockChannel1);
+    const project = await Project.insert(mockProject);
+    await request(app)
+      .post(`/api/v1/channels/project/${project.projectId}`)
+      .send(mockChannel1);
     const res = await request(app)
-      .patch(`/api/v1/channels/${channel.channelId}`)
+      .patch('/api/v1/channels/1')
       .send({
         fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
       });
     expect(res.body).toEqual({
-      ...channel,
+      channelId: expect.any(String),
+      ...mockChannel1,
       fx: { osc: 'triangle', randomTestKey: ['random', 'test', 'array'] },
     });
   });
