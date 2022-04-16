@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS channels CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
 
 CREATE TABLE users(
     user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -32,6 +33,15 @@ CREATE TABLE channels(
   ON DELETE CASCADE
 );
 
+CREATE TABLE profiles(
+  profile_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  bio TEXT NOT NULL,
+  avatar TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  ON DELETE CASCADE
+);
+
 INSERT INTO users(username, password_hash)
 VALUES ('space-lady', '123456'); 
 
@@ -41,3 +51,6 @@ VALUES ('our seeded project', 8, 90, '1');
 INSERT INTO channels(project_id, title, instrument, fx, steps)
 VALUES ('1', 'channel title', '{ "osc": "sine" }', '{ "reverb": 0.01 }', '{ "C4", "D4" }');
 
+INSERT INTO profiles(user_id, bio, avatar)
+VALUES ('1', 'paragon of outsider music, inspiration of tones', 'https://media2.fdncms.com/portmerc/imager/u/original/19330747/1505926068-music-ttd-paveladyspacelady-terriloewenthal-2.jpg
+')
