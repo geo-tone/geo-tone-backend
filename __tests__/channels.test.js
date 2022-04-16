@@ -16,9 +16,10 @@ describe('geo-tone-backend routes', () => {
 
   const mockProject = {
     title: 'My project',
-    steps: 8,
     bpm: 90,
+    volume: 1,
     userId: '1',
+    channels: [],
   };
 
   const mockChannel1 = {
