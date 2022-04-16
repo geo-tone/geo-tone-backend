@@ -22,7 +22,7 @@ describe('user routes test', () => {
   it('creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
     expect(res.body).toEqual({
-      user_id: expect.any(String),
+      userId: expect.any(String),
       username: 'mockusername',
     });
   });
