@@ -32,7 +32,19 @@ describe('user routes test', () => {
   // SIGN IN AN EXISTING USER
   it('signs in an existing user', async () => {
     await UserService.create(mockUser);
-    const res = await agent.post('/api/v1/users/signin').send(mockUser);
+    const res = await agent.post('/api/v1/users/sessions').send(mockUser);
     expect(res.body).toEqual({ message: 'Successfully signed in!' });
+  });
+
+  // LOGS OUT A LOGGED IN USER
+  it('logs out a user that is logged in', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const res = await agent.delete('/api/v1/users/sessions');
+
+    expect(res.body).toEqual({
+      success: true,
+      message: 'Successfully logged out!',
+    });
   });
 });
