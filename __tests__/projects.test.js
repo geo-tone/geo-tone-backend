@@ -15,10 +15,11 @@ describe('geo-tone-backend routes', () => {
   });
 
   const mockProject = {
-    title: 'My project',
-    steps: 8,
-    bpm: 90,
     userId: '1',
+    title: 'My mock project',
+    volume: -2,
+    bpm: 200,
+    channels: [],
   };
 
   const mockUser = {
@@ -27,10 +28,13 @@ describe('geo-tone-backend routes', () => {
   };
 
   const seededProject = {
-    title: 'our seeded project',
-    steps: 8,
-    bpm: 90,
     userId: '1',
+    title: 'our seeded project',
+    volume: 0,
+    bpm: 90,
+    channels: [
+      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
+    ],
   };
 
   // POST
@@ -41,7 +45,7 @@ describe('geo-tone-backend routes', () => {
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 
-  // GET PROJECTS BY USER ID
+  // GET ALL PROJECTS BY USER ID
   it('gets all projects associated with a single user_id', async () => {
     // await request(app).post('/api/v1/users').send(mockUser);
 

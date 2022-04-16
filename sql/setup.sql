@@ -15,8 +15,9 @@ CREATE TABLE projects(
   project_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id BIGINT NOT NULL,
   title TEXT NOT NULL,
-  steps SMALLINT NOT NULL,
+  volume SMALLINT NOT NULL,
   bpm SMALLINT NOT NULL,
+  channels TEXT [] NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
   ON DELETE CASCADE
 );
@@ -35,8 +36,8 @@ CREATE TABLE channels(
 INSERT INTO users(username, password_hash)
 VALUES ('space-lady', '123456'); 
 
-INSERT INTO projects(title, steps, bpm, user_id)
-VALUES ('our seeded project', 8, 90, '1'); 
+INSERT INTO projects(title, volume, bpm, channels, user_id)
+VALUES ('our seeded project', 0, 90, ARRAY ['{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }'], '1'); 
 
 INSERT INTO channels(project_id, title, instrument, fx, steps)
 VALUES ('1', 'channel title', '{ "osc": "sine" }', '{ "reverb": 0.01 }', '{ "C4", "D4" }');
