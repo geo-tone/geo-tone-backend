@@ -47,10 +47,18 @@ describe('geo-tone-backend routes', () => {
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/profiles').send(mockProfile);
     const res = await agent.get('/api/v1/profiles');
-    console.log('res.body', res.body);
     expect(res.body).toEqual([
       { profileId: expect.any(String), ...seededProfile },
       { profileId: expect.any(String), ...mockProfile },
     ]);
+  });
+
+  // GETS A PROFILE BY USER ID
+  it('gets a profile by user_id', async () => {
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/profiles').send(mockProfile);
+    const res = await agent.get(`/api/v1/profiles/${user.userId}`);
+    expect(res.body).toEqual({ profileId: expect.any(String), ...mockProfile });
   });
 });
