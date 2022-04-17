@@ -54,11 +54,26 @@ describe('geo-tone-backend routes', () => {
   });
 
   // GETS A PROFILE BY USER ID
-  it('gets a profile by user_id', async () => {
+  it('gets a profile by user id', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/profiles').send(mockProfile);
     const res = await agent.get(`/api/v1/profiles/${user.userId}`);
     expect(res.body).toEqual({ profileId: expect.any(String), ...mockProfile });
+  });
+
+  // UPDATES AN EXISTING PROFILE
+  it('updates an existing profile by user id', async () => {
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/profiles').send(mockProfile);
+    const res = await agent
+      .patch(`/api/v1/profiles/${user.userId}`)
+      .send({ bio: 'updated bio' });
+    expect(res.body).toEqual({
+      profileId: expect.any(String),
+      ...mockProfile,
+      bio: 'updated bio',
+    });
   });
 });
