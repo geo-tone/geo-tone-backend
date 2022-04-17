@@ -53,5 +53,4 @@ INSERT INTO channels(project_id, title, instrument, fx, steps)
 VALUES ('1', 'channel title', '{ "osc": "sine" }', '{ "reverb": 0.01 }', '{ "C4", "D4" }');
 
 INSERT INTO profiles(user_id, bio, avatar)
-VALUES ('1', 'paragon of outsider music, inspiration of tones', 'https://media2.fdncms.com/portmerc/imager/u/original/19330747/1505926068-music-ttd-paveladyspacelady-terriloewenthal-2.jpg
-')
+VALUES ('1', 'paragon of outsider music, inspiration of tones', 'https://media2.fdncms.com/portmerc/imager/u/original/19330747/1505926068-music-ttd-paveladyspacelady-terriloewenthal-2.jpg'); 
