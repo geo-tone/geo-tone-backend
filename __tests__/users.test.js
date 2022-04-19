@@ -52,7 +52,6 @@ describe('user routes test', () => {
   it('deletes a user from the users table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    console.log('test user', user);
     const res = await agent.delete(`/api/v1/users/${user.userId}`);
     expect(res.body).toEqual({
       success: true,
