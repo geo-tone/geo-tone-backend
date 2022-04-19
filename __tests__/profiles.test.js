@@ -17,12 +17,14 @@ describe('geo-tone-backend routes', () => {
 
   const mockProfile = {
     userId: '2',
+    username: 'mockusername',
     bio: 'bio',
     avatar: 'url',
   };
 
   const seededProfile = {
     userId: '1',
+    username: 'space-lady',
     bio: 'paragon of outsider music, inspiration of tones',
     avatar:
       'https://media2.fdncms.com/portmerc/imager/u/original/19330747/1505926068-music-ttd-paveladyspacelady-terriloewenthal-2.jpg',
@@ -53,12 +55,12 @@ describe('geo-tone-backend routes', () => {
     ]);
   });
 
-  // GETS A PROFILE BY USER ID
-  it('gets a profile by user id', async () => {
+  // GETS A PROFILE BY USERNAME
+  it('gets a profile by username', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/profiles').send(mockProfile);
-    const res = await agent.get(`/api/v1/profiles/${user.userId}`);
+    const res = await agent.get(`/api/v1/profiles/${user.username}`);
     expect(res.body).toEqual({ profileId: expect.any(String), ...mockProfile });
   });
 
@@ -68,7 +70,7 @@ describe('geo-tone-backend routes', () => {
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/profiles').send(mockProfile);
     const res = await agent
-      .patch(`/api/v1/profiles/${user.userId}`)
+      .patch(`/api/v1/profiles/${user.username}`)
       .send({ bio: 'updated bio' });
     expect(res.body).toEqual({
       profileId: expect.any(String),
