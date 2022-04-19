@@ -88,13 +88,10 @@ describe('geo-tone-backend routes', () => {
 
   // DELETE A PROJECT BY PROJECT ID
   it('deletes a project by project id', async () => {
-    await Channel.insert('1', {
-      title: 'still not sure',
-      steps: [],
-      instrument: {},
-      fx: {},
-    });
-    const res = await request(app).delete('/api/v1/projects/1');
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const project = await Project.insert(mockProject);
+    const res = await agent.delete(`/api/v1/projects/${project.projectId}`);
     expect(res.body).toEqual({ message: 'Successfully deleted project' });
   });
 });
