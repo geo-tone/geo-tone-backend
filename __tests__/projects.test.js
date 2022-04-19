@@ -77,9 +77,10 @@ describe('geo-tone-backend routes', () => {
 
   // EDIT A PROJECT BY PROJECT ID
   it('modifies a project by project id', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
     const project = await Project.insert(mockProject);
-    const res = await request(app)
+    const res = await agent
       .patch(`/api/v1/projects/${project.projectId}`)
       .send({ title: 'new title' });
     expect(res.body).toEqual({ ...project, title: 'new title' });
