@@ -66,9 +66,10 @@ describe('geo-tone-backend routes', () => {
 
   // GET INDIVIDUAL PROJECT BY PROJECT ID
   it('gets an individual project asociated with a project_id', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
-    await request(app).post('/api/v1/projects').send(mockProject);
-    const res = await request(app).get('/api/v1/projects/2');
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const project = await agent.post('/api/v1/projects').send(mockProject);
+    const res = await agent.get(`/api/v1/projects/${project.body.projectId}`);
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 
