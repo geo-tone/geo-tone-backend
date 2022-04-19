@@ -4,6 +4,9 @@ const request = require('supertest');
 const app = require('../lib/app');
 const Project = require('../lib/models/Project');
 const Channel = require('../lib/models/Channel');
+const UserService = require('../lib/services/UserService');
+
+const agent = request.agent(app);
 
 describe('geo-tone-backend routes', () => {
   beforeEach(() => {
@@ -14,21 +17,21 @@ describe('geo-tone-backend routes', () => {
     pool.end();
   });
 
+  const mockUser = {
+    username: 'username',
+    password: '123456',
+  };
+
   const mockProject = {
-    userId: '1',
+    userId: '2',
     title: 'My mock project',
     volume: -2,
     bpm: 200,
     channels: [],
   };
 
-  const mockUser = {
-    username: 'username',
-    passwordHash: '123456',
-  };
-
-  const seededProject = {
-    userId: '1',
+  const mockProject2 = {
+    userId: '2',
     title: 'our seeded project',
     volume: 0,
     bpm: 90,
@@ -39,37 +42,45 @@ describe('geo-tone-backend routes', () => {
 
   // POST
   it('creates a row in the projects table', async () => {
-    // await request(app).post('/api/v1/users').send(mockUser);
-
-    const res = await request(app).post('/api/v1/projects').send(mockProject);
-    expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const res = await agent.post('/api/v1/projects').send(mockProject);
+    expect(res.body).toEqual({
+      projectId: expect.any(String),
+      userId: expect.any(String),
+      ...mockProject,
+    });
   });
 
   // GET ALL PROJECTS BY USER ID
   it('gets all projects associated with a single user_id', async () => {
-    // await request(app).post('/api/v1/users').send(mockUser);
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/projects').send(mockProject2);
+    await agent.post('/api/v1/projects').send(mockProject);
 
-    await request(app).post('/api/v1/projects').send(mockProject);
-    const res = await request(app).get('/api/v1/projects/user/1');
+    const res = await agent.get(`/api/v1/projects/user/${user.userId}`);
     expect(res.body).toEqual([
-      { projectId: expect.any(String), ...seededProject },
+      { projectId: expect.any(String), ...mockProject2 },
       { projectId: expect.any(String), ...mockProject },
     ]);
   });
 
   // GET INDIVIDUAL PROJECT BY PROJECT ID
   it('gets an individual project asociated with a project_id', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
-    await request(app).post('/api/v1/projects').send(mockProject);
-    const res = await request(app).get('/api/v1/projects/2');
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const project = await agent.post('/api/v1/projects').send(mockProject);
+    const res = await agent.get(`/api/v1/projects/${project.body.projectId}`);
     expect(res.body).toEqual({ projectId: expect.any(String), ...mockProject });
   });
 
   // EDIT A PROJECT BY PROJECT ID
   it('modifies a project by project id', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
     const project = await Project.insert(mockProject);
-    const res = await request(app)
+    const res = await agent
       .patch(`/api/v1/projects/${project.projectId}`)
       .send({ title: 'new title' });
     expect(res.body).toEqual({ ...project, title: 'new title' });
@@ -77,13 +88,10 @@ describe('geo-tone-backend routes', () => {
 
   // DELETE A PROJECT BY PROJECT ID
   it('deletes a project by project id', async () => {
-    await Channel.insert('1', {
-      title: 'still not sure',
-      steps: [],
-      instrument: {},
-      fx: {},
-    });
-    const res = await request(app).delete('/api/v1/projects/1');
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const project = await Project.insert(mockProject);
+    const res = await agent.delete(`/api/v1/projects/${project.projectId}`);
     expect(res.body).toEqual({ message: 'Successfully deleted project' });
   });
 });
