@@ -17,6 +17,11 @@ describe('geo-tone-backend routes', () => {
     pool.end();
   });
 
+  const mockUser = {
+    username: 'username',
+    password: '123456',
+  };
+
   const mockProject = {
     userId: '2',
     title: 'My mock project',
@@ -25,13 +30,8 @@ describe('geo-tone-backend routes', () => {
     channels: [],
   };
 
-  const mockUser = {
-    username: 'username',
-    password: '123456',
-  };
-
-  const seededProject = {
-    userId: '1',
+  const mockProject2 = {
+    userId: '2',
     title: 'our seeded project',
     volume: 0,
     bpm: 90,
@@ -54,12 +54,14 @@ describe('geo-tone-backend routes', () => {
 
   // GET ALL PROJECTS BY USER ID
   it('gets all projects associated with a single user_id', async () => {
-    // await request(app).post('/api/v1/users').send(mockUser);
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/projects').send(mockProject2);
+    await agent.post('/api/v1/projects').send(mockProject);
 
-    await request(app).post('/api/v1/projects').send(mockProject);
-    const res = await request(app).get('/api/v1/projects/user/1');
+    const res = await agent.get(`/api/v1/projects/user/${user.userId}`);
     expect(res.body).toEqual([
-      { projectId: expect.any(String), ...seededProject },
+      { projectId: expect.any(String), ...mockProject2 },
       { projectId: expect.any(String), ...mockProject },
     ]);
   });
