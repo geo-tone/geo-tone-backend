@@ -23,7 +23,7 @@ CREATE TABLE profiles(
   username TEXT NOT NULL UNIQUE,
   bio TEXT NOT NULL,
   avatar TEXT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
   FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
