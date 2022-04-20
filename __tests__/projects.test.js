@@ -27,7 +27,7 @@ describe('geo-tone-backend routes', () => {
     volume: -12,
     bpm: 120,
     channels: [
-      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5" }',
+      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
     ],
   };
 
