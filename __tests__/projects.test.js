@@ -67,9 +67,9 @@ describe('geo-tone-backend routes', () => {
 
   // EDIT A PROJECT BY PROJECT ID
   it('modifies a project by project id', async () => {
-    await UserService.create(mockUser);
+    const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    const project = await Project.insert(mockProject);
+    const project = await Project.insert(user.userId);
     const res = await agent
       .patch(`/api/v1/projects/${project.projectId}`)
       .send({ title: 'new title' });
@@ -78,9 +78,9 @@ describe('geo-tone-backend routes', () => {
 
   // DELETE A PROJECT BY PROJECT ID
   it('deletes a project by project id', async () => {
-    await UserService.create(mockUser);
+    const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    const project = await Project.insert(mockProject);
+    const project = await Project.insert(user.userId);
     const res = await agent.delete(`/api/v1/projects/${project.projectId}`);
     expect(res.body).toEqual({ message: 'Successfully deleted project' });
   });
