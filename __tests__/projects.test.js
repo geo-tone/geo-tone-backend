@@ -3,7 +3,6 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Project = require('../lib/models/Project');
-const Channel = require('../lib/models/Channel');
 const UserService = require('../lib/services/UserService');
 
 const agent = request.agent(app);
@@ -24,30 +23,21 @@ describe('geo-tone-backend routes', () => {
 
   const mockProject = {
     userId: '2',
-    title: 'My mock project',
-    volume: -2,
-    bpm: 200,
-    channels: [],
-  };
-
-  const mockProject2 = {
-    userId: '2',
-    title: 'our seeded project',
-    volume: 0,
-    bpm: 90,
+    title: 'untitled',
+    volume: -12,
+    bpm: 120,
     channels: [
-      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
+      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5" }',
     ],
   };
 
   // POST
   it('creates a row in the projects table', async () => {
-    await UserService.create(mockUser);
+    const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    const res = await agent.post('/api/v1/projects').send(mockProject);
+    const res = await agent.post('/api/v1/projects').send(user.userId);
     expect(res.body).toEqual({
       projectId: expect.any(String),
-      userId: expect.any(String),
       ...mockProject,
     });
   });
@@ -56,12 +46,12 @@ describe('geo-tone-backend routes', () => {
   it('gets all projects associated with a single user_id', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    await agent.post('/api/v1/projects').send(mockProject2);
-    await agent.post('/api/v1/projects').send(mockProject);
+    await agent.post('/api/v1/projects').send(user.userId);
+    await agent.post('/api/v1/projects').send(user.userId);
 
     const res = await agent.get(`/api/v1/projects/user/${user.userId}`);
     expect(res.body).toEqual([
-      { projectId: expect.any(String), ...mockProject2 },
+      { projectId: expect.any(String), ...mockProject },
       { projectId: expect.any(String), ...mockProject },
     ]);
   });
