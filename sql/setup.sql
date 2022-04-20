@@ -43,7 +43,7 @@ CREATE TABLE projects(
   title TEXT NOT NULL DEFAULT 'untitled',
   volume SMALLINT NOT NULL DEFAULT -12,
   bpm SMALLINT NOT NULL DEFAULT 120,
-  channels TEXT [] NOT NULL DEFAULT ARRAY [ '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5" }' ],
+  channels TEXT [] NOT NULL DEFAULT ARRAY [ '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }' ],
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
