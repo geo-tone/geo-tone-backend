@@ -4,7 +4,6 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS profiles CASCADE;
 DROP TABLE IF EXISTS projects CASCADE;
-DROP TABLE IF EXISTS channels CASCADE;
 
 CREATE TABLE users(
   user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -52,17 +51,3 @@ INSERT INTO
   projects(user_id)
 VALUES
   ('1'); 
-
-CREATE TABLE channels(
-  channel_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  project_id BIGINT NOT NULL,
-  title TEXT NOT NULL,
-  instrument JSON NOT NULL,
-  fx JSON NOT NULL,
-  steps TEXT [] NOT NULL,
-  FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
-);
-
-INSERT INTO channels(project_id, title, instrument, fx, steps)
-VALUES (' 1 ', ' channel title ', ' { "osc": "sine" } ', ' { "reverb": 0.01 } ', ' { "C4",
-  "D4" } ');
