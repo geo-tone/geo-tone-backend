@@ -31,9 +31,7 @@ CREATE TABLE projects(
   title TEXT NOT NULL DEFAULT 'untitled',
   volume SMALLINT NOT NULL DEFAULT -12,
   bpm SMALLINT NOT NULL DEFAULT 120,
-  channels TEXT [] NOT NULL DEFAULT ARRAY ['{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null],
-  "volume": -5,
-  "reverb": 0.5 } '],
+  channels TEXT [] NOT NULL DEFAULT ARRAY [ '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5" }' ],
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -50,14 +48,14 @@ CREATE TABLE channels(
 INSERT INTO
   users(username, password_hash)
 VALUES
-  (' space - lady ', ' 123456 ');
+  (' space-lady ', ' 123456 ');
 
 INSERT INTO
   profiles(user_id, username, bio, avatar)
 VALUES
   (
     ' 1 ',
-    ' space - lady ',
+    ' space-lady ',
     ' paragon of outsider music,
   inspiration of tones ',
     ' https: / / media2.fdncms.com / portmerc / imager / u / original / 19330747 / 1505926068 - music - ttd - paveladyspacelady - terriloewenthal -2.jpg '

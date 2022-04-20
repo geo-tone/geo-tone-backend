@@ -3,7 +3,6 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const Project = require('../lib/models/Project');
-const Channel = require('../lib/models/Channel');
 const UserService = require('../lib/services/UserService');
 
 const agent = request.agent(app);
@@ -22,12 +21,23 @@ describe('geo-tone-backend routes', () => {
     password: '123456',
   };
 
+  const mockNewProject = {
+    title: 'untitled',
+    volume: -12,
+    bpm: 120,
+    channels: [
+      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5" }',
+    ],
+  };
+
   const mockProject = {
     userId: '2',
     title: 'My mock project',
     volume: -2,
     bpm: 200,
-    channels: [],
+    channels: [
+      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
+    ],
   };
 
   const mockProject2 = {
@@ -42,13 +52,13 @@ describe('geo-tone-backend routes', () => {
 
   // POST
   it('creates a row in the projects table', async () => {
-    await UserService.create(mockUser);
+    const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
-    const res = await agent.post('/api/v1/projects').send(mockProject);
+    const res = await agent.post('/api/v1/projects').send(user.userId);
     expect(res.body).toEqual({
       projectId: expect.any(String),
       userId: expect.any(String),
-      ...mockProject,
+      ...mockNewProject,
     });
   });
 
