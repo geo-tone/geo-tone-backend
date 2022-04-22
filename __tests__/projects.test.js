@@ -31,7 +31,7 @@ describe('geo-tone-backend routes', () => {
     ],
   };
 
-  // POST
+  // CREATE A PROJECT
   it('creates a row in the projects table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
@@ -100,7 +100,6 @@ describe('geo-tone-backend routes', () => {
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/projects').send(user.userId);
     await agent.post('/api/v1/projects').send(user.userId);
-
     const res = await request(app).get('/api/v1/projects/count');
     expect(Number(res.text)).toEqual(3);
   });
