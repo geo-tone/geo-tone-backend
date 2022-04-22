@@ -43,7 +43,7 @@ describe('geo-tone-backend routes', () => {
   });
 
   // GET ALL PROJECTS
-  it.only('gets all projects in the table', async () => {
+  it('gets all projects in the table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/projects').send(user.userId);
@@ -92,5 +92,16 @@ describe('geo-tone-backend routes', () => {
     const project = await Project.insert(user.userId);
     const res = await agent.delete(`/api/v1/projects/${project.projectId}`);
     expect(res.body).toEqual({ message: 'Successfully deleted project' });
+  });
+
+  // GET NUMBER OF PROJECTS
+  it('gets the number of projects in the database', async () => {
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/projects').send(user.userId);
+    await agent.post('/api/v1/projects').send(user.userId);
+
+    const res = await request(app).get('/api/v1/projects/count');
+    expect(Number(res.text)).toEqual(3);
   });
 });
