@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-// const User = require('../lib/models/User');
 const UserService = require('../lib/services/UserService');
 
 const agent = request.agent(app);
@@ -41,7 +40,6 @@ describe('user routes test', () => {
     await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     const res = await agent.delete('/api/v1/users/sessions');
-
     expect(res.body).toEqual({
       success: true,
       message: 'Successfully logged out!',
@@ -57,5 +55,13 @@ describe('user routes test', () => {
       success: true,
       message: 'User account has successfully been deleted!',
     });
+  });
+
+  // GET NUMBER OF USERS
+  it('gets the number of users in the database', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const res = await request(app).get('/api/v1/users/count');
+    expect(Number(res.text)).toEqual(2);
   });
 });

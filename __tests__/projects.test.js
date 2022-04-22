@@ -24,14 +24,14 @@ describe('geo-tone-backend routes', () => {
   const mockProject = {
     userId: '2',
     title: 'untitled',
-    volume: -12,
-    bpm: 120,
+    volume: -48,
+    bpm: 180,
     channels: [
-      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
+      '{ "id": 0, "type": "monoSynth", "osc": "triangle", "steps": [null, null, null, null, null, null, null, null], "volume": -6, "reverb": 0.1 }',
     ],
   };
 
-  // POST
+  // CREATE A PROJECT
   it('creates a row in the projects table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
@@ -43,23 +43,21 @@ describe('geo-tone-backend routes', () => {
   });
 
   // GET ALL PROJECTS
-  it.only('gets all projects in the table', async () => {
+  it('gets all projects in the table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/projects').send(user.userId);
     await agent.post('/api/v1/projects').send(user.userId);
-
     const res = await request(app).get('/api/v1/projects');
     expect(res.body).toHaveLength(3);
   });
 
   // GET ALL PROJECTS BY USER ID
-  it('gets all projects associated with a single user_id', async () => {
+  it('gets all projects associated with a single user id', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     await agent.post('/api/v1/projects').send(user.userId);
     await agent.post('/api/v1/projects').send(user.userId);
-
     const res = await agent.get(`/api/v1/projects/user/${user.userId}`);
     expect(res.body).toEqual([
       { projectId: expect.any(String), ...mockProject },
@@ -68,7 +66,7 @@ describe('geo-tone-backend routes', () => {
   });
 
   // GET INDIVIDUAL PROJECT BY PROJECT ID
-  it('gets an individual project asociated with a project_id', async () => {
+  it('gets an individual project asociated with a project id', async () => {
     await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
     const project = await agent.post('/api/v1/projects').send(mockProject);
@@ -94,5 +92,15 @@ describe('geo-tone-backend routes', () => {
     const project = await Project.insert(user.userId);
     const res = await agent.delete(`/api/v1/projects/${project.projectId}`);
     expect(res.body).toEqual({ message: 'Successfully deleted project' });
+  });
+
+  // GET NUMBER OF PROJECTS
+  it('gets the number of projects in the database', async () => {
+    const user = await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/projects').send(user.userId);
+    await agent.post('/api/v1/projects').send(user.userId);
+    const res = await request(app).get('/api/v1/projects/count');
+    expect(Number(res.text)).toEqual(3);
   });
 });

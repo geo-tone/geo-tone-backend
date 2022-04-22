@@ -35,7 +35,7 @@ describe('geo-tone-backend routes', () => {
     password: 'mockpassword',
   };
 
-  // POST
+  // CREATE A PROFILE
   it('creates a profile', async () => {
     await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
