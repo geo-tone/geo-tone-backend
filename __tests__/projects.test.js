@@ -24,10 +24,10 @@ describe('geo-tone-backend routes', () => {
   const mockProject = {
     userId: '2',
     title: 'untitled',
-    volume: -12,
-    bpm: 120,
+    volume: -48,
+    bpm: 180,
     channels: [
-      '{ "id": 0, "type": "synth", "osc": "sine", "steps": [null, null, null, null, null, null, null, null], "volume": -5, "reverb": 0.5 }',
+      '{ "id": 0, "type": "monoSynth", "osc": "triangle", "steps": [null, null, null, null, null, null, null, null], "volume": -6, "reverb": 0.1 }',
     ],
   };
 
