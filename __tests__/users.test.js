@@ -58,4 +58,12 @@ describe('user routes test', () => {
       message: 'User account has successfully been deleted!',
     });
   });
+
+  // GET NUMBER OF USERS
+  it('gets the number of users in the database', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const res = await request(app).get('/api/v1/users/count');
+    expect(Number(res.text)).toEqual(2);
+  });
 });
