@@ -129,4 +129,19 @@ describe('geo-tone-backend routes', () => {
       status: 403,
     });
   });
+
+  // PROHIBIT USERS FROM DELETING OTHER USER PROJECTS
+  it('throws an error when trying to edit another user project', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+
+    const res = await agent
+      .delete(`/api/v1/projects/${seededProject.projectId}`)
+      .send({ title: 'editing a project that is not mine' });
+
+    expect(res.body).toEqual({
+      message: 'You are not authorized to modify this project',
+      status: 403,
+    });
+  });
 });
