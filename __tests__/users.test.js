@@ -64,4 +64,15 @@ describe('user routes test', () => {
     const res = await request(app).get('/api/v1/users/count');
     expect(Number(res.text)).toEqual(2);
   });
+
+  // PROHIBIT USERS FROM DELETING OTHER USER ACCOUNTS
+  it('throws an error when trying to delete another user', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+    const res = await agent.delete('/api/v1/users/1');
+    expect(res.body).toEqual({
+      message: 'You are not authorized to modify this user',
+      status: 403,
+    });
+  });
 });
