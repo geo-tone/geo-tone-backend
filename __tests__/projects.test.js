@@ -31,6 +31,17 @@ describe('geo-tone-backend routes', () => {
     ],
   };
 
+  const seededProject = {
+    projectId: '99',
+    userId: '99',
+    title: 'can not edit me',
+    volume: -48,
+    bpm: 180,
+    channels: [
+      '{ "id": 0, "type": "monoSynth", "osc": "triangle", "steps": [null, null, null, null, null, null, null, null], "volume": -6, "reverb": 0.1 }',
+    ],
+  };
+
   // CREATE A PROJECT
   it('creates a row in the projects table', async () => {
     const user = await UserService.create(mockUser);
@@ -102,5 +113,20 @@ describe('geo-tone-backend routes', () => {
     await agent.post('/api/v1/projects').send(user.userId);
     const res = await request(app).get('/api/v1/projects/count');
     expect(Number(res.text)).toEqual(3);
+  });
+
+  // PROHIBIT USERS FROM EDITING OTHER USER PROFILES
+  it('throws an error when trying to edit another user project', async () => {
+    await UserService.create(mockUser);
+    await agent.post('/api/v1/users/sessions').send(mockUser);
+
+    const res = await agent
+      .patch(`/api/v1/projects/${seededProject.projectId}`)
+      .send({ title: 'editing a project that is not mine' });
+
+    expect(res.body).toEqual({
+      message: 'You are not authorized to modify this project',
+      status: 403,
+    });
   });
 });
