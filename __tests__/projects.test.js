@@ -115,7 +115,7 @@ describe('geo-tone-backend routes', () => {
     expect(Number(res.text)).toEqual(3);
   });
 
-  // PROHIBIT USERS FROM EDITING OTHER USER PROFILES
+  // PROHIBIT USERS FROM EDITING OTHER USER PROJECTS
   it('throws an error when trying to edit another user project', async () => {
     await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
