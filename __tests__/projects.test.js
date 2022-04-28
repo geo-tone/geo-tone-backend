@@ -57,9 +57,16 @@ describe('geo-tone-backend routes', () => {
   it('gets all projects in the table', async () => {
     const user = await UserService.create(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUser);
+    await agent.post('/api/v1/profiles').send({
+      userId: '2',
+      username: 'mockusername',
+      bio: 'bio',
+      avatar: 'url',
+    });
     await agent.post('/api/v1/projects').send(user.userId);
     await agent.post('/api/v1/projects').send(user.userId);
     const res = await request(app).get('/api/v1/projects');
+    console.log('res.body', res.body);
     expect(res.body).toHaveLength(3);
   });
 
